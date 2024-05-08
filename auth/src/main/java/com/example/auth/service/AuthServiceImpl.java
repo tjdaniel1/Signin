@@ -2,7 +2,9 @@ package com.example.auth.service;
 
 import com.example.auth.domain.entity.User;
 import com.example.auth.domain.entity.UserRepository;
+import com.example.auth.domain.request.SigninRequest;
 import com.example.auth.domain.request.SignupRequest;
+import com.example.auth.domain.response.SignInResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,5 +29,10 @@ public class AuthServiceImpl implements AuthService {
         String encoded = passwordEncoder.encode(request.password());
         User entity = request.toEntity(encoded);
         userRepository.save(entity);
+    }
+
+    @Override
+    public SignInResponse signIn(SigninRequest request) {
+        return null;
     }
 }
