@@ -11,4 +11,4 @@ spring:
 
 jwt:
   secret: asdflasjfdlaskdjhflkashdfjsdakfhaskjdfsadfnsalkt
-  expiration: 1000 * 60 * 60 * 24 * 30
+  expiration: 25920000
