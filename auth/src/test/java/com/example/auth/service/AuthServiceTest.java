@@ -52,12 +52,13 @@ class AuthServiceTest {
         @Test
         void 실패_아이디가_틀릴때(){
             //given
-            SigninRequest request = new SigninRequest("t@t.com", "1234");
+            SigninRequest request = new SigninRequest("t@t123.com", "1234");
             //when & then
             assertThrows(IllegalArgumentException.class, () -> authService.signIn(request));
         }
         @Test
         void 실패_비밀번호가_틀릴때(){
+
         }
     }
 
