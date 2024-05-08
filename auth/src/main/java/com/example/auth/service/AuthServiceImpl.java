@@ -5,6 +5,7 @@ import com.example.auth.domain.entity.UserRepository;
 import com.example.auth.domain.request.SigninRequest;
 import com.example.auth.domain.request.SignupRequest;
 import com.example.auth.domain.response.SignInResponse;
+import com.example.auth.global.utils.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
     @Override
     @Transactional
     public void insertUser(SignupRequest request) {
@@ -33,6 +36,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SignInResponse signIn(SigninRequest request) {
-        return null;
+        Optional<User> byEmail = userRepository.findByEmail(request.email());
+        if(byEmail.isEmpty()) throw new IllegalArgumentException("이메일 비어있음");
+        if(!passwordEncoder.matches(request.password(),
+                byEmail.get().getPassword())) throw new IllegalArgumentException("비밀번호 매치 안됨");
+        String token = jwtUtil.generateToken(request.email());
+
+        return SignInResponse.from(token);
     }
 }

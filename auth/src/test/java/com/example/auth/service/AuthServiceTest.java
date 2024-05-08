@@ -46,16 +46,19 @@ class AuthServiceTest {
             SignInResponse res = authService.signIn(request);
             //then
             assertNotNull(res.token());
-            assertEquals(3,res.token().split(".").length);
+            assertEquals(3,res.token().split("\\.").length);
             assertEquals("Bearer", res.tokenType());
         }
         @Test
-        void 실패(){
-
+        void 실패_아이디가_틀릴때(){
+            //given
+            SigninRequest request = new SigninRequest("t@t.com", "1234");
+            //when & then
+            assertThrows(IllegalArgumentException.class, () -> authService.signIn(request));
         }
-    }
-    @Test
-    void signIn() {
+        @Test
+        void 실패_비밀번호가_틀릴때(){
+        }
     }
 
     @Nested

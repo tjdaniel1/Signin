@@ -1,5 +1,6 @@
 package com.example.auth.global.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +11,10 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret;
+    private final SecretKey secretKey;
     private final Long expiration;
 
     public String generateToken(String email){
-        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         String token = Jwts.builder()
                 .subject(email)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -22,12 +22,20 @@ public class JwtUtil {
                 .compact();
         return token;
     }
+    public String getByEmailFromTokenAndValidate(String token){
+        Claims payload = (Claims)Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parse(token)
+                .getPayload();
+        return payload.getSubject();
+    }
 
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") Long expiration)
     {
-        this.secret = secret;
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration;
     }
 
