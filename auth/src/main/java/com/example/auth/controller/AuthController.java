@@ -24,6 +24,6 @@ public class AuthController {
     @PostMapping("signin")
     @ResponseStatus(HttpStatus.CREATED)
     public SignInResponse signin(@RequestBody SigninRequest signinRequest) {
-        authService.signIn(signinRequest);
+        return authService.signIn(signinRequest);
     }
 }
