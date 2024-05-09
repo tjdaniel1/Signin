@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 //이 서버는 로그인(토큰 발급) 회원가입(insert) 토큰검증(인가)
@@ -15,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder @Getter
 @Table(name = "USERS")
-public class User {
+public class User implements UserDetails {
     @Id @GeneratedValue
     @Column(name = "USER_ID")
     private UUID id;
@@ -31,4 +35,33 @@ public class User {
     private String gender;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> "ROLE_USER");
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
